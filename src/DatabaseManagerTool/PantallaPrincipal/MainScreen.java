@@ -26,7 +26,8 @@ public class MainScreen extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jFrame1 = new javax.swing.JFrame();
+        jPanelMainScreen = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTree_BDsInfo = new javax.swing.JTree();
         jTabbedPane_TableInfo = new javax.swing.JTabbedPane();
@@ -49,6 +50,9 @@ public class MainScreen extends javax.swing.JFrame {
         jTabbedPaneStatus = new javax.swing.JTabbedPane();
         jScrollPane9 = new javax.swing.JScrollPane();
         jTextAreaStatus = new javax.swing.JTextArea();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        jTextArea2 = new javax.swing.JTextArea();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1690, 840));
@@ -56,14 +60,15 @@ public class MainScreen extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(1690, 870));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setMinimumSize(new java.awt.Dimension(1680, 830));
-        jPanel1.setPreferredSize(new java.awt.Dimension(1920, 180));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanelMainScreen.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelMainScreen.setForeground(new java.awt.Color(255, 255, 255));
+        jPanelMainScreen.setMinimumSize(new java.awt.Dimension(1680, 830));
+        jPanelMainScreen.setPreferredSize(new java.awt.Dimension(1920, 180));
+        jPanelMainScreen.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jScrollPane1.setViewportView(jTree_BDsInfo);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 210, 430));
+        jPanelMainScreen.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 210, 430));
 
         jTableColumns.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -95,7 +100,7 @@ public class MainScreen extends javax.swing.JFrame {
 
         jTabbedPane_TableInfo.addTab("Constrains", jScrollPane3);
 
-        jPanel1.add(jTabbedPane_TableInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 510, 210, 300));
+        jPanelMainScreen.add(jTabbedPane_TableInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 510, 210, 300));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -133,15 +138,16 @@ public class MainScreen extends javax.swing.JFrame {
 
         jTabbedPane_TableData.addTab("Query", jScrollPane6);
 
-        jPanel1.add(jTabbedPane_TableData, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 70, 1430, 370));
+        jPanelMainScreen.add(jTabbedPane_TableData, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 70, 1430, 370));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 102, 204));
+        jLabel1.setForeground(new java.awt.Color(255, 0, 0));
         jLabel1.setText("Oracle Data Base Management System");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 550, 40));
+        jPanelMainScreen.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 550, 40));
 
+        jLabel2.setForeground(new java.awt.Color(255, 153, 153));
         jLabel2.setText("Sistema de manejo de base de datos de Oracle");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 400, -1));
+        jPanelMainScreen.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 400, -1));
 
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -158,7 +164,7 @@ public class MainScreen extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Results", jScrollPane7);
 
-        jPanel1.add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 450, 1430, 230));
+        jPanelMainScreen.add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 450, 1430, 230));
 
         jTextAreaStatus.setColumns(20);
         jTextAreaStatus.setRows(5);
@@ -166,10 +172,19 @@ public class MainScreen extends javax.swing.JFrame {
 
         jTabbedPaneStatus.addTab("Status", jScrollPane9);
 
-        jPanel1.add(jTabbedPaneStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 690, 1430, 120));
+        jTextArea2.setColumns(20);
+        jTextArea2.setRows(5);
+        jScrollPane8.setViewportView(jTextArea2);
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1680, 870));
-        jPanel1.getAccessibleContext().setAccessibleDescription("");
+        jTabbedPaneStatus.addTab("Exceptions", jScrollPane8);
+
+        jPanelMainScreen.add(jTabbedPaneStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 690, 1430, 120));
+
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/DatabaseManagerTool/Recursos/Logos/Oracle-logo.png"))); // NOI18N
+        jPanelMainScreen.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1450, 10, 210, 80));
+
+        getContentPane().add(jPanelMainScreen, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1680, 870));
+        jPanelMainScreen.getAccessibleContext().setAccessibleDescription("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -210,9 +225,11 @@ public class MainScreen extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanelMainScreen;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -220,6 +237,7 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPaneStatus;
@@ -231,6 +249,7 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JTable jTableColumns;
     private javax.swing.JTable jTableConstrains;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextAreaStatus;
     private javax.swing.JTree jTree_BDsInfo;
     // End of variables declaration//GEN-END:variables
