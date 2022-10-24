@@ -2,19 +2,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package PantallaConexiones;
+package DatabaseManagerTool.PantallaConexiones;
 
 /**
  *
  * @author angie
  */
 public class ConnectionScreen extends javax.swing.JFrame {
-
+    
     /**
      * Creates new form ConexionScreen
      */
     public ConnectionScreen() {
         initComponents();
+    }
+    
+    public boolean GuardarConexion(){
+        
+        return false;
     }
 
     /**
@@ -38,8 +43,7 @@ public class ConnectionScreen extends javax.swing.JFrame {
         jTextAreaResult = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jTabbedPane3 = new javax.swing.JTabbedPane();
-        jtxtUserName1 = new javax.swing.JTextField();
+        jtxtConName = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jTabbedPane4 = new javax.swing.JTabbedPane();
         jPanelUserData1 = new javax.swing.JPanel();
@@ -47,7 +51,9 @@ public class ConnectionScreen extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jtxtUserName2 = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        jTabbedPane5 = new javax.swing.JTabbedPane();
+        jCBTypeCon = new javax.swing.JComboBox<>();
+        jLabel12 = new javax.swing.JLabel();
+        jTabbedPaneDetails = new javax.swing.JTabbedPane();
         jPanelUserData = new javax.swing.JPanel();
         jtxtUserPass = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -55,9 +61,9 @@ public class ConnectionScreen extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jtxtUserPass2 = new javax.swing.JTextField();
-        jbtCreateUser = new javax.swing.JButton();
         jbtCreateUser1 = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
+        jbtCreateUser2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setSize(new java.awt.Dimension(1680, 870));
@@ -98,11 +104,10 @@ public class ConnectionScreen extends javax.swing.JFrame {
 
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/DatabaseManagerTool/Recursos/Imagenes/HostImage.png"))); // NOI18N
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(1450, 400, 130, 210));
-        jPanel1.add(jTabbedPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 150, 370, 190));
 
-        jtxtUserName1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jtxtUserName1.setForeground(new java.awt.Color(102, 102, 102));
-        jPanel1.add(jtxtUserName1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 70, 370, -1));
+        jtxtConName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jtxtConName.setForeground(new java.awt.Color(102, 102, 102));
+        jPanel1.add(jtxtConName, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 70, 370, -1));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(102, 102, 102));
@@ -118,8 +123,8 @@ public class ConnectionScreen extends javax.swing.JFrame {
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel8.setText("Contraseña:");
-        jPanelUserData1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, -1, -1));
+        jLabel8.setText("Tipo de Conexion:");
+        jPanelUserData1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, -1, -1));
 
         jtxtUserName2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jtxtUserName2.setForeground(new java.awt.Color(102, 102, 102));
@@ -130,9 +135,19 @@ public class ConnectionScreen extends javax.swing.JFrame {
         jLabel9.setText("Nombre de Usuario:");
         jPanelUserData1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
+        jCBTypeCon.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jCBTypeCon.setForeground(new java.awt.Color(102, 102, 102));
+        jCBTypeCon.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "default", "SYSDBA", "SYSOPER", "SYSBACKUP", "SYSDG", "SYSKM", "SYSASM" }));
+        jPanelUserData1.add(jCBTypeCon, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 150, 130, -1));
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel12.setText("Contraseña:");
+        jPanelUserData1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, -1, -1));
+
         jTabbedPane4.addTab("USER INFO", jPanelUserData1);
 
-        jPanel1.add(jTabbedPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 150, 370, 190));
+        jPanel1.add(jTabbedPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 150, 370, 230));
 
         jPanelUserData.setBackground(new java.awt.Color(255, 255, 255));
         jPanelUserData.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -164,20 +179,9 @@ public class ConnectionScreen extends javax.swing.JFrame {
         jtxtUserPass2.setForeground(new java.awt.Color(102, 102, 102));
         jPanelUserData.add(jtxtUserPass2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 340, -1));
 
-        jTabbedPane5.addTab("DETAILS", jPanelUserData);
+        jTabbedPaneDetails.addTab("DETAILS", jPanelUserData);
 
-        jPanel1.add(jTabbedPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 370, 370, 270));
-
-        jbtCreateUser.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jbtCreateUser.setForeground(new java.awt.Color(102, 102, 102));
-        jbtCreateUser.setText("CONNECT");
-        jbtCreateUser.setActionCommand("");
-        jbtCreateUser.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbtCreateUserActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jbtCreateUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(1100, 670, -1, -1));
+        jPanel1.add(jTabbedPaneDetails, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 390, 370, 270));
 
         jbtCreateUser1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jbtCreateUser1.setForeground(new java.awt.Color(102, 102, 102));
@@ -193,18 +197,29 @@ public class ConnectionScreen extends javax.swing.JFrame {
         jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/DatabaseManagerTool/Recursos/Imagenes/DBConnection.png"))); // NOI18N
         jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(1420, 110, 210, 210));
 
+        jbtCreateUser2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jbtCreateUser2.setForeground(new java.awt.Color(102, 102, 102));
+        jbtCreateUser2.setText("CONNECT");
+        jbtCreateUser2.setActionCommand("");
+        jbtCreateUser2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtCreateUser2ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jbtCreateUser2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1100, 670, -1, -1));
+
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1680, 870));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jbtCreateUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtCreateUserActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jbtCreateUserActionPerformed
-
     private void jbtCreateUser1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtCreateUser1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jbtCreateUser1ActionPerformed
+
+    private void jbtCreateUser2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtCreateUser2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbtCreateUser2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -243,9 +258,11 @@ public class ConnectionScreen extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> jCBTypeCon;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -262,15 +279,14 @@ public class ConnectionScreen extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JTabbedPane jTabbedPane3;
     private javax.swing.JTabbedPane jTabbedPane4;
-    private javax.swing.JTabbedPane jTabbedPane5;
+    private javax.swing.JTabbedPane jTabbedPaneDetails;
     private javax.swing.JTextArea jTextAreaResult;
     private javax.swing.JTree jTreeUsers;
-    private javax.swing.JButton jbtCreateUser;
     private javax.swing.JButton jbtCreateUser1;
+    private javax.swing.JButton jbtCreateUser2;
+    private javax.swing.JTextField jtxtConName;
     private javax.swing.JTextField jtxtUserName;
-    private javax.swing.JTextField jtxtUserName1;
     private javax.swing.JTextField jtxtUserName2;
     private javax.swing.JTextField jtxtUserPass;
     private javax.swing.JTextField jtxtUserPass1;
