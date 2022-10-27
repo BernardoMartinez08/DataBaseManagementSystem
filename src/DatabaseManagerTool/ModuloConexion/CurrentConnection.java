@@ -15,9 +15,9 @@ public class CurrentConnection {
 
     private Conexion conexion;
 
-    public String connection_status = "Conexion Establecida Correctamente.";
-    public String connection_save_status = "Conexion Almacenada Correctamente.";
-    public String connection_search_status = "Conexion Encontrada Correctamente.";
+    public String connection_status = "NO HAY UNA CONEXION ESTABLECIDA";
+    public String connection_save_status = "NO SE HA LOGRADO ALMACENAR SU CONEXION";
+    public String connection_search_status = "NO SE HA ENCONTRADO UNA CONEXION CON ESTOS DATOS";
 
     public CurrentConnection(String _name, String _host, String _port, String _sid, String _user, String _password) {
         this.conexion = new Conexion();
@@ -32,8 +32,7 @@ public class CurrentConnection {
     public Connection conectar() {
         Conexion aux = conexion.searchConnection(this.conexion.getNAME());
 
-        if (aux.getConnection() != null) {
-
+        if (aux.founded == true) {
             if (aux.getPASSWORD().equals(this.conexion.getPASSWORD())) {
                 this.conexion.conect();
                 this.connection_status = this.conexion.getStatus();
@@ -67,7 +66,8 @@ public class CurrentConnection {
     }
 
     public Conexion searchConexion(String _name) {
+        Conexion _conexion = this.conexion.searchConnection(_name);
         this.connection_search_status = this.conexion.getSearchStatus();
-        return this.conexion.searchConnection(_name);
+        return  _conexion;
     }
 }

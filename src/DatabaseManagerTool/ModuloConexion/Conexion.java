@@ -20,18 +20,20 @@ public class Conexion {
     private String HOST = "localhost";
     private String PORT = "1521";
     private String SID = "XE";
-    private final String URL = "jdbc:oracle:thin:@//" + HOST + ":" + PORT + "/" + SID;
+    private String URL = "jdbc:oracle:thin:@" + HOST + ":" + PORT + ":" + SID;
     private String USER = "NORTHWIND";
     private String PASSWORD = "24464438";
     private String NAME = "Local Instance";
+    public boolean founded = false;
+    public boolean connected = false;
 
     //Datos para almacenar la conexion
     private RandomAccessFile registro_conexion;
 
     public Connection conexion;
-    private String connection_status = "Conexion Establecida Correctamente.";
-    private String connection_save_status = "Conexion Almacenada Correctamente.";
-    private String connection_search_status = "Conexion Encontrada Correctamente.";
+    private String connection_status = "NO HAY UNA CONEXION ESTABLECIDA";
+    private String connection_save_status = "NO SE HA LOGRADO ALMACENAR SU CONEXION";
+    private String connection_search_status = "NO SE HA ENCONTRADO UNA CONEXION CON ESTOS DATOS";
 
     public Conexion() {
         this.conexion = null;
@@ -53,12 +55,13 @@ public class Conexion {
     public boolean conect() {
         try {
             Class.forName(DRIVER);
+            URL = URL = "jdbc:oracle:thin:@" + HOST + ":" + PORT + ":" + SID;
             this.conexion = DriverManager.getConnection(URL, USER, PASSWORD);
             this.connection_status = "Conexion Establecida Correctamente.";
             return true;
         } catch (ClassNotFoundException | SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
-            this.connection_status = e.getMessage() + ".";
+            this.connection_status = "No se ha logrado establecer la conexion debiado a: " + e.getMessage() + ".";
             System.exit(0);
             return false;
         }
@@ -142,28 +145,42 @@ public class Conexion {
 
     public void save_connection() {
         try {
-            //Asegurar que el puntero este en el final
-            registro_conexion.seek(registro_conexion.length());
+            searchConnection(NAME);
 
-            //Almacenar Informacion de la Conexion
-            registro_conexion.writeUTF(NAME);
-            registro_conexion.writeUTF(HOST);
-            registro_conexion.writeUTF(PORT);
-            registro_conexion.writeUTF(SID);
-            registro_conexion.writeUTF(USER);
-            registro_conexion.writeUTF(PASSWORD);
+            if (founded == false) {
+                //Asegurar que el puntero este en el final
+                registro_conexion = new RandomAccessFile("Conexiones/connections.con", "rw");
+                registro_conexion.seek(registro_conexion.length());
 
-            connection_search_status = "Conexion Almacenada Correctamente.";
-            System.out.println(connection_save_status);
+                //Almacenar Informacion de la Conexion
+                registro_conexion.writeUTF(NAME);
+                registro_conexion.writeUTF(HOST);
+                registro_conexion.writeUTF(PORT);
+                registro_conexion.writeUTF(SID);
+                registro_conexion.writeUTF(USER);
+                registro_conexion.writeUTF(PASSWORD);
+
+                connection_search_status = "Conexion Almacenada Correctamente.";
+                System.out.println(connection_save_status);
+                registro_conexion.close();
+            }
         } catch (IOException e) {
-            connection_save_status = "Estamos teniendo problemas para guardar tu conexiones en el archivo de tus conexiones" + e;
+            connection_save_status = "Estamos teniendo problemas para guardar tu conexiones en el archivo de tus conexiones: " + e;
             System.out.println(connection_save_status);
+
+            try {
+                registro_conexion.close();
+            } catch (IOException ex) {
+                connection_save_status = "Estamos teniendo problemas para trabajar tus conexiones en el archivo de tus conexiones: " + e;
+                System.out.println(connection_save_status);
+            }
         }
     }
 
     public ArrayList connection_list() {
         ArrayList listado = new ArrayList();
         try {
+            registro_conexion = new RandomAccessFile("Conexiones/connections.con", "rw");
             registro_conexion.seek(0);
 
             while (registro_conexion.getFilePointer() < registro_conexion.length()) {
@@ -187,9 +204,17 @@ public class Conexion {
 
             connection_search_status = "Conexiones Encontradas Correctamente.";
             System.out.println(connection_search_status);
+            registro_conexion.close();
         } catch (IOException e) {
-            connection_search_status = "Estamos teniendo problemas para extraer tus conexiones en el archivo de tus conexiones" + e;
+            connection_search_status = "Estamos teniendo problemas para extraer tus conexiones en el archivo de tus conexiones: " + e;
             System.out.println(connection_search_status);
+
+            try {
+                registro_conexion.close();
+            } catch (IOException ex) {
+                connection_search_status = "Estamos teniendo problemas para trabajar tus conexiones en el archivo de tus conexiones: " + e;
+                System.out.println(connection_search_status);
+            }
         }
         return listado;
     }
@@ -197,7 +222,10 @@ public class Conexion {
     public Conexion searchConnection(String _name_search) {
         Conexion _conexion;
         _conexion = new Conexion();
+        founded = false;
+
         try {
+            registro_conexion = new RandomAccessFile("Conexiones/connections.con", "rw");
             registro_conexion.seek(0);
 
             while (registro_conexion.getFilePointer() < registro_conexion.length()) {
@@ -218,11 +246,21 @@ public class Conexion {
 
                     connection_search_status = "Conexion Encontrada Correctamente.";
                     System.out.println(connection_search_status);
+                    registro_conexion.close();
+                    founded = true;
+                    return _conexion;
                 }
             }
         } catch (IOException e) {
-            connection_search_status = "Estamos teniendo problemas para encontrar tu conexion en el archivo de tus conexiones, intenta con otra conexion" + e;
+            connection_search_status = "Estamos teniendo problemas para encontrar tu conexion en el archivo de tus conexiones, intenta con otra conexion: " + e;
             System.out.println(connection_search_status);
+
+            try {
+                registro_conexion.close();
+            } catch (IOException ex) {
+                connection_search_status = "Estamos teniendo problemas para trabajar tus conexiones en el archivo de tus conexiones: " + e;
+                System.out.println(connection_search_status);
+            }
         }
         return _conexion;
     }
