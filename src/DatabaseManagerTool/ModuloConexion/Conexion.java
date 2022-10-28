@@ -36,9 +36,8 @@ public class Conexion {
     private String connection_search_status = "NO SE HA ENCONTRADO UNA CONEXION CON ESTOS DATOS";
 
     public Conexion() {
-        this.conexion = null;
-
         try {
+            conexion = null;
             //1-Asegurar que el folder Conexiones exista
             File conexiones_file = new File("Conexiones");
             conexiones_file.mkdir();
@@ -199,7 +198,7 @@ public class Conexion {
                 _conexion.setUSER(_user);
                 _conexion.setPASSWORD(_password);
 
-                listado.add(conexion);
+                listado.add(_conexion);
             }
 
             connection_search_status = "Conexiones Encontradas Correctamente.";

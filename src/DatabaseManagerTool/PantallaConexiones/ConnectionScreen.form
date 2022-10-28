@@ -97,7 +97,10 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTree" name="jTreeUsers">
+                <Component class="javax.swing.JTree" name="jTreeConnectios">
+                  <Events>
+                    <EventHandler event="valueChanged" listener="javax.swing.event.TreeSelectionListener" parameters="javax.swing.event.TreeSelectionEvent" handler="jTreeConnectiosValueChanged"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
