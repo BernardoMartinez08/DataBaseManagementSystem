@@ -52,6 +52,7 @@ public class ConnectionScreen extends javax.swing.JFrame {
                             if (!sid.equals("")) {
                                 conexion_actual = new CurrentConnection(conection_name, host, port, sid, user, password);
                                 conexion_actual.conectar();
+                                addHijo();
                                 JOptionPane.showMessageDialog(null, conexion_actual.connection_status, "ESTADO DE LA CONEXION", JOptionPane.INFORMATION_MESSAGE);
                             } else {
                                 JOptionPane.showMessageDialog(null, "Debe ingresar el SID que correspomde al servidor al que desea conectarse, Intente denuevo.", "FALTAN DATOS", JOptionPane.ERROR_MESSAGE);
