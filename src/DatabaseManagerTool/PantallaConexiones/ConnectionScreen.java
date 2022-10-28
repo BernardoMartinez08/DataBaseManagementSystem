@@ -394,6 +394,9 @@ public class ConnectionScreen extends javax.swing.JFrame {
                 
                 jtxtUserName.setText(aux.getUSER());
                 user = aux.getUSER();
+                
+                jtxtUserPass.setText("");
+                password = "";
             }
         }catch(Exception e){
             

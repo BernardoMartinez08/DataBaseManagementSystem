@@ -43,6 +43,7 @@ public class CurrentConnection {
         if (aux.founded == true) {
             if (aux.getPASSWORD().equals(this.conexion.getPASSWORD())) {
                 this.conexion.conect();
+                this.save_connection();
                 this.connection_status = this.conexion.getStatus();
                 return this.conexion.getConnection();
             } else {
@@ -53,6 +54,7 @@ public class CurrentConnection {
             conexion.save_connection();
             this.connection_save_status = this.conexion.getSaveStatus();
             this.conexion.conect();
+            this.save_connection();
             this.connection_status = this.conexion.getStatus();
             return this.conexion.getConnection();
         }
@@ -161,4 +163,3 @@ public class CurrentConnection {
         return _conexion;
     }
 }
-
