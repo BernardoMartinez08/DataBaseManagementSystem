@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class CurrentConnection {
 
-    private Conexion conexion;
+    public Conexion conexion;
 
     public String connection_status = "NO HAY UNA CONEXION ESTABLECIDA";
     public String connection_save_status = "NO SE HA LOGRADO ALMACENAR SU CONEXION";

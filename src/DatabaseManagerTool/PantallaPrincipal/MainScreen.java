@@ -4,6 +4,13 @@
  */
 package DatabaseManagerTool.PantallaPrincipal;
 
+import DatabaseManagerTool.ModuloConexion.Conexion;
+import DatabaseManagerTool.ModuloConexion.CurrentConnection;
+import java.util.ArrayList;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import DatabaseManagerTool.Operaciones.BaseOperations;
+
 /**
  *
  * @author angie
@@ -15,6 +22,102 @@ public class MainScreen extends javax.swing.JFrame {
      */
     public MainScreen() {
         initComponents();
+        conectar();
+        cargarDBInformation();
+    }
+
+    String conection_name = "";
+    String user = "";
+    String password = "";
+    String host = "";
+    String port = "";
+    String sid = "";
+
+    DefaultMutableTreeNode top = new DefaultMutableTreeNode("Connectios");
+    DefaultMutableTreeNode raiz;
+    DefaultTreeModel dtm;
+
+    public CurrentConnection conexion_actual = new CurrentConnection(conection_name, host, port, sid, user, password);
+    public BaseOperations operaciones = new BaseOperations();
+
+    public void conectar() {
+        CurrentConnection auxCurrentCon = new CurrentConnection(user, host, port, sid, user, password);
+        Conexion auxCon = auxCurrentCon.searchCurrentConnection();
+
+        conexion_actual = new CurrentConnection(auxCon.getNAME(), auxCon.getHOST(), auxCon.getPORT(), auxCon.getSID(), auxCon.getUSER(), auxCon.getPASSWORD());
+
+        conexion_actual.conectar();
+        System.out.println(conexion_actual.conexion.getPORT());
+
+        operaciones.c = conexion_actual.conexion;
+    }
+
+    private void cargarDBInformation() {
+        raiz = new DefaultMutableTreeNode("Connections");
+        dtm = new DefaultTreeModel(raiz);
+        cargarDBInformation(raiz);
+    }
+
+    private void cargarDBInformation(DefaultMutableTreeNode _node) {
+        ArrayList<Conexion> conexiones = conexion_actual.getConnections();
+
+        for (Conexion conexion : conexiones) {
+            DefaultMutableTreeNode conexion_node = new DefaultMutableTreeNode(conexion.getNAME());
+            _node.add(conexion_node);
+
+            DefaultMutableTreeNode usuario_node = new DefaultMutableTreeNode(conexion.getUSER().toUpperCase());
+            conexion_node.add(usuario_node);
+
+            DefaultMutableTreeNode tables_node = new DefaultMutableTreeNode("TABLES");
+            usuario_node.add(tables_node);
+            addTablas(tables_node, conexion.getUSER());
+
+            DefaultMutableTreeNode views_node = new DefaultMutableTreeNode("VIEWS");
+            usuario_node.add(views_node);
+
+            DefaultMutableTreeNode packages_node = new DefaultMutableTreeNode("PACKAGES");
+            usuario_node.add(packages_node);
+
+            DefaultMutableTreeNode stored_procedures_node = new DefaultMutableTreeNode("STORED PROCEDURES");
+            usuario_node.add(stored_procedures_node);
+
+            DefaultMutableTreeNode functions_node = new DefaultMutableTreeNode("FUNCTIONS");
+            usuario_node.add(functions_node);
+
+            DefaultMutableTreeNode secuences_node = new DefaultMutableTreeNode("SECUENCES");
+            usuario_node.add(secuences_node);
+
+            DefaultMutableTreeNode triggers_node = new DefaultMutableTreeNode("TRIGGERS");
+            usuario_node.add(triggers_node);
+
+            DefaultMutableTreeNode indexes_node = new DefaultMutableTreeNode("INDEXES");
+            usuario_node.add(indexes_node);
+
+            DefaultMutableTreeNode table_spaces_node = new DefaultMutableTreeNode("TABLE SPACES");
+            usuario_node.add(table_spaces_node);
+        }
+        dtm = new DefaultTreeModel(raiz);
+        this.jTree_BDsInfo.setModel(dtm);
+
+    }
+
+    private void addTablas(DefaultMutableTreeNode tablas_node, String user) {
+        String query = "SELECT OWNER, TABLE_NAME FROM ALL_TABLES WHERE OWNER LIKE '%" + user.toUpperCase() + "'";
+        ArrayList<String> tables = operaciones.fill_array(query, 2);
+
+        for (String row_table : tables) {
+            //System.out.println(row[1] + "\n");
+            DefaultMutableTreeNode child_table = new DefaultMutableTreeNode(row_table);
+            tablas_node.add(child_table);
+
+            /*String query_columns = "SELECT OWNER, TABLE_NAME, COLUMN_NAME FROM ALL_TAB_COLUMNS WHERE OWNER LIKE '%" + user.toUpperCase() + "%' AND OWNER NOT LIKE '%SYS%' AND OWNER NOT LIKE '%SYSTEM%' AND TABLE_NAME LIKE '%" + row_table + "%'";
+            ArrayList<String> columns = operaciones.fill_array(query_columns, 3);
+
+            for (String row_columns : columns) {
+                DefaultMutableTreeNode child_column = new DefaultMutableTreeNode(row_columns);
+                child_table.add(child_column);
+            }*/
+        }
     }
 
     /**
@@ -35,6 +138,8 @@ public class MainScreen extends javax.swing.JFrame {
         jTableColumns = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTableConstrains = new javax.swing.JTable();
+        jScrollPane10 = new javax.swing.JScrollPane();
+        jTableSession = new javax.swing.JTable();
         jTabbedPane_TableData = new javax.swing.JTabbedPane();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -99,6 +204,21 @@ public class MainScreen extends javax.swing.JFrame {
         jScrollPane3.setViewportView(jTableConstrains);
 
         jTabbedPane_TableInfo.addTab("Constrains", jScrollPane3);
+
+        jTableSession.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane10.setViewportView(jTableSession);
+
+        jTabbedPane_TableInfo.addTab("Session", jScrollPane10);
 
         jPanelMainScreen.add(jTabbedPane_TableInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 510, 210, 300));
 
@@ -231,6 +351,7 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanelMainScreen;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -248,6 +369,7 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JTable jTable3;
     private javax.swing.JTable jTableColumns;
     private javax.swing.JTable jTableConstrains;
+    private javax.swing.JTable jTableSession;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextAreaStatus;

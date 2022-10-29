@@ -61,7 +61,6 @@ public class Conexion {
         } catch (ClassNotFoundException | SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
             this.connection_status = "No se ha logrado establecer la conexion debiado a: " + e.getMessage() + ".";
-            System.exit(0);
             return false;
         }
     }

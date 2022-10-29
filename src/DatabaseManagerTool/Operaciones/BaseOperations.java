@@ -5,7 +5,6 @@
 package DatabaseManagerTool.Operaciones;
 
 import DatabaseManagerTool.ModuloConexion.Conexion;
-import com.sun.tools.javac.util.StringUtils;
 import java.awt.HeadlessException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,42 +22,36 @@ public class BaseOperations {
     private static PreparedStatement prepared_statement;
     private static ResultSet result;
     DefaultTableModel ModeloTabla;
+    
+    public Conexion c;
 
     public BaseOperations() {
 
     }
 
-    public static boolean insert_delete_update(String query) {
-        Conexion c = new Conexion();
+    public boolean insert_delete_update(String query) {
         try {
             c.conect();
             prepared_statement = c.conexion.prepareStatement(query);
             int i = prepared_statement.executeUpdate();
-            c.disconect();
 
             return i > 0;
 
         } catch (HeadlessException | SQLException e) {
             System.out.println("Error: " + e);
-        } finally {
-            c.disconect();
-        }
+        } 
         return false;
     }
 
     public ResultSet select(String query) {
-        Conexion c = new Conexion();
         try {
             c.conect();
             prepared_statement = c.conexion.prepareStatement(query);
             result = prepared_statement.executeQuery();
-            c.disconect();
             return result;
 
         } catch (SQLException e) {
             System.out.println("Error: " + e);
-        } finally {
-            c.disconect();
         }
 
         return null;
@@ -87,7 +80,7 @@ public class BaseOperations {
             result = select(query);
 
             while (result.next()) {
-                for (int i = 0; i < fila.length; i++) {
+                for (int i = 1; i < fila.length; i++) {
                     fila[i] = result.getString(i);
                 }
 
@@ -95,31 +88,33 @@ public class BaseOperations {
             }
 
             tabla.setModel(ModeloTabla);
+            c.disconect();
 
         } catch (SQLException e) {
             System.out.println("Error: " + e);
         } finally {
-            
+            c.disconect();
         }
     }
 
-    public ArrayList fill_array(String query, int _num_columnas) {
+    public ArrayList fill_array(String query, int columna) {
         ArrayList datos = new ArrayList();
-        String[] fila = new String[_num_columnas];
+        String fila = "";
         try {
             result = select(query);
 
             while (result.next()) {
-                for (int i = 0; i < fila.length; i++) {
-                    fila[i] = result.getString(i);
-                }
-
+                fila = result.getString(columna);
                 datos.add(fila);
             }
+            //System.out.println(fila);
+          
+            c.disconect();
             return datos;
         } catch (SQLException e) {
             System.out.println("Error: " + e);
         } finally {
+            c.disconect();
         }
         return null;
     }

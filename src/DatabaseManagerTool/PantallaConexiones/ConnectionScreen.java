@@ -9,7 +9,6 @@ import DatabaseManagerTool.ModuloConexion.CurrentConnection;
 import DatabaseManagerTool.ModuloConexion.Conexion;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.io.File;
 import java.util.ArrayList;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -42,7 +41,7 @@ public class ConnectionScreen extends javax.swing.JFrame {
     DefaultTreeModel dtm;
 
     public CurrentConnection conexion_actual = new CurrentConnection(conection_name, host, port, sid, user, password);
-
+    
     public boolean conectar() {
         if (!conection_name.equals("")) {
             if (!user.equals("")) {
@@ -156,20 +155,20 @@ public class ConnectionScreen extends javax.swing.JFrame {
     }
 
     private void addHijo(DefaultMutableTreeNode node) {
-        ArrayList<Conexion> conexiones  = conexion_actual.getConnections();
-        
+        ArrayList<Conexion> conexiones = conexion_actual.getConnections();
+
         for (Conexion conexion : conexiones) {
             DefaultMutableTreeNode child = new DefaultMutableTreeNode(conexion.getNAME());
             node.add(child);
-            
+
             child.add(new DefaultMutableTreeNode("HOST: " + conexion.getHOST()));
             child.add(new DefaultMutableTreeNode("PORT: " + conexion.getPORT()));
             child.add(new DefaultMutableTreeNode("SID: " + conexion.getSID()));
         }
         dtm = new DefaultTreeModel(raiz);
         this.jTreeConnectios.setModel(dtm);
-        
-}
+
+    }
 
 /**
  * This method is called from within the constructor to initialize the form.
