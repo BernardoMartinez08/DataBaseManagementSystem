@@ -41,7 +41,7 @@ public class MainScreen extends javax.swing.JFrame {
     public BaseOperations operaciones = new BaseOperations();
 
     public void conectar() {
-        CurrentConnection auxCurrentCon = new CurrentConnection(user, host, port, sid, user, password);
+        CurrentConnection auxCurrentCon = new CurrentConnection(conection_name, host, port, sid, user, password);
         Conexion auxCon = auxCurrentCon.searchCurrentConnection();
 
         conexion_actual = new CurrentConnection(auxCon.getNAME(), auxCon.getHOST(), auxCon.getPORT(), auxCon.getSID(), auxCon.getUSER(), auxCon.getPASSWORD());
@@ -58,15 +58,22 @@ public class MainScreen extends javax.swing.JFrame {
         cargarDBInformation(raiz);
     }
 
+    /*
     private void cargarDBInformation(DefaultMutableTreeNode _node) {
         ArrayList<Conexion> conexiones = conexion_actual.getConnections();
-
+        String query = "";
+        
         for (Conexion conexion : conexiones) {
             DefaultMutableTreeNode conexion_node = new DefaultMutableTreeNode(conexion.getNAME());
             _node.add(conexion_node);
 
             DefaultMutableTreeNode usuario_node = new DefaultMutableTreeNode(conexion.getUSER().toUpperCase());
             conexion_node.add(usuario_node);
+            
+            DefaultMutableTreeNode table_spaces_node = new DefaultMutableTreeNode("TABLE SPACES");
+            conexion_node.add(table_spaces_node);
+            query = "SELECT TABLESPACE_NAME FROM USER_TABLESPACES";
+            add_to_tree(table_spaces_node, query, 1);
 
             DefaultMutableTreeNode tables_node = new DefaultMutableTreeNode("TABLES");
             usuario_node.add(tables_node);
@@ -74,49 +81,130 @@ public class MainScreen extends javax.swing.JFrame {
 
             DefaultMutableTreeNode views_node = new DefaultMutableTreeNode("VIEWS");
             usuario_node.add(views_node);
+            query = "SELECT OWNER, VIEW_NAME FROM ALL_VIEWS WHERE OWNER LIKE '%" + user.toUpperCase() + "'";
+            add_to_tree(views_node, query, 2);
 
             DefaultMutableTreeNode packages_node = new DefaultMutableTreeNode("PACKAGES");
             usuario_node.add(packages_node);
+            query = "SELECT OWNER, PROCEDURE_NAME, OBJECT_TYPE FROM ALL_PROCEDURES WHERE OWNER LIKE '%" + user.toUpperCase() + "' AND OBJECT_TYPE LIKE '%PACKAGE%'";
+            add_to_tree(packages_node, query, 2);
 
             DefaultMutableTreeNode stored_procedures_node = new DefaultMutableTreeNode("STORED PROCEDURES");
             usuario_node.add(stored_procedures_node);
+            query = "SELECT OWNER, PROCEDURE_NAME, OBJECT_TYPE FROM ALL_PROCEDURES WHERE OWNER LIKE '%" + user.toUpperCase() + "' AND OBJECT_TYPE LIKE '%PROCEDURE%'";
+            add_to_tree(stored_procedures_node, query, 2);
 
             DefaultMutableTreeNode functions_node = new DefaultMutableTreeNode("FUNCTIONS");
             usuario_node.add(functions_node);
+            query = "SELECT OWNER, PROCEDURE_NAME, OBJECT_TYPE FROM ALL_PROCEDURES WHERE OWNER LIKE '%" + user.toUpperCase() + "' AND OBJECT_TYPE LIKE '%FUNCTION%'";
+            add_to_tree(functions_node, query, 2);
 
             DefaultMutableTreeNode secuences_node = new DefaultMutableTreeNode("SECUENCES");
             usuario_node.add(secuences_node);
+            query = "SELECT SEQUENCE_OWNER, SEQUENCE_NAME FROM ALL_SEQUENCES WHERE SEQUENCE_OWNER LIKE '%" + user.toUpperCase() + "'";
+            add_to_tree(secuences_node, query, 2);
 
             DefaultMutableTreeNode triggers_node = new DefaultMutableTreeNode("TRIGGERS");
             usuario_node.add(triggers_node);
+            query = "SELECT OWNER, TRIGGER_NAME FROM ALL_TRIGGERS WHERE OWNER LIKE '%" + user.toUpperCase() + "'";
+            add_to_tree(triggers_node, query, 2);
 
             DefaultMutableTreeNode indexes_node = new DefaultMutableTreeNode("INDEXES");
             usuario_node.add(indexes_node);
+            query = "SELECT OWNER, INDEX_NAME FROM ALL_INDEXES WHERE OWNER LIKE '%" + user.toUpperCase() + "'";
+            add_to_tree(indexes_node, query, 2);
 
-            DefaultMutableTreeNode table_spaces_node = new DefaultMutableTreeNode("TABLE SPACES");
-            usuario_node.add(table_spaces_node);
         }
         dtm = new DefaultTreeModel(raiz);
         this.jTree_BDsInfo.setModel(dtm);
 
     }
+     */
+    private void cargarDBInformation(DefaultMutableTreeNode _node) {
+        String query = "";
 
-    private void addTablas(DefaultMutableTreeNode tablas_node, String user) {
-        String query = "SELECT OWNER, TABLE_NAME FROM ALL_TABLES WHERE OWNER LIKE '%" + user.toUpperCase() + "'";
-        ArrayList<String> tables = operaciones.fill_array(query, 2);
+        DefaultMutableTreeNode conexion_node = new DefaultMutableTreeNode(conexion_actual.conexion.getNAME());
+        _node.add(conexion_node);
+
+        DefaultMutableTreeNode usuario_node = new DefaultMutableTreeNode(conexion_actual.conexion.getUSER().toUpperCase());
+        conexion_node.add(usuario_node);
+
+        DefaultMutableTreeNode table_spaces_node = new DefaultMutableTreeNode("TABLE SPACES");
+        conexion_node.add(table_spaces_node);
+        query = "SELECT TABLESPACE_NAME FROM USER_TABLESPACES";
+        add_to_tree(table_spaces_node, query, 1);
+
+        DefaultMutableTreeNode tables_node = new DefaultMutableTreeNode("TABLES");
+        usuario_node.add(tables_node);
+        addTablas(tables_node);
+
+        DefaultMutableTreeNode views_node = new DefaultMutableTreeNode("VIEWS");
+        usuario_node.add(views_node);
+        query = "SELECT VIEW_NAME FROM USER_VIEWS";
+        add_to_tree(views_node, query, 1);
+
+        DefaultMutableTreeNode packages_node = new DefaultMutableTreeNode("PACKAGES");
+        usuario_node.add(packages_node);
+        query = "SELECT PROCEDURE_NAME, OBJECT_TYPE FROM USER_PROCEDURES WHERE OBJECT_TYPE LIKE '%PACKAGE%'";
+        add_to_tree(packages_node, query, 1);
+
+        DefaultMutableTreeNode stored_procedures_node = new DefaultMutableTreeNode("STORED PROCEDURES");
+        usuario_node.add(stored_procedures_node);
+        query = "SELECT PROCEDURE_NAME, OBJECT_TYPE FROM USER_PROCEDURES WHERE OBJECT_TYPE LIKE '%PROCEDURE%'";
+        add_to_tree(stored_procedures_node, query, 1);
+
+        DefaultMutableTreeNode functions_node = new DefaultMutableTreeNode("FUNCTIONS");
+        usuario_node.add(functions_node);
+        query = "SELECT PROCEDURE_NAME, OBJECT_TYPE FROM USER_PROCEDURES WHERE OBJECT_TYPE LIKE '%FUNCTION%'";
+        add_to_tree(functions_node, query, 1);
+
+        DefaultMutableTreeNode secuences_node = new DefaultMutableTreeNode("SECUENCES");
+        usuario_node.add(secuences_node);
+        query = "SELECT SEQUENCE_NAME FROM USER_SEQUENCES";
+        add_to_tree(secuences_node, query, 1);
+
+        DefaultMutableTreeNode triggers_node = new DefaultMutableTreeNode("TRIGGERS");
+        usuario_node.add(triggers_node);
+        query = "SELECT TRIGGER_NAME FROM USER_TRIGGERS";
+        add_to_tree(triggers_node, query, 1);
+
+        DefaultMutableTreeNode indexes_node = new DefaultMutableTreeNode("INDEXES");
+        usuario_node.add(indexes_node);
+        query = "SELECT INDEX_NAME FROM USER_INDEXES";
+        add_to_tree(indexes_node, query, 1);
+
+        dtm = new DefaultTreeModel(raiz);
+        this.jTree_BDsInfo.setModel(dtm);
+
+    }
+
+    
+    private void addTablas(DefaultMutableTreeNode tablas_node) {
+        String query = "SELECT TABLE_NAME FROM USER_TABLES";
+        ArrayList<String> tables = operaciones.fill_array(query, 1);
 
         for (String row_table : tables) {
             //System.out.println(row[1] + "\n");
             DefaultMutableTreeNode child_table = new DefaultMutableTreeNode(row_table);
             tablas_node.add(child_table);
 
-            /*String query_columns = "SELECT OWNER, TABLE_NAME, COLUMN_NAME FROM ALL_TAB_COLUMNS WHERE OWNER LIKE '%" + user.toUpperCase() + "%' AND OWNER NOT LIKE '%SYS%' AND OWNER NOT LIKE '%SYSTEM%' AND TABLE_NAME LIKE '%" + row_table + "%'";
-            ArrayList<String> columns = operaciones.fill_array(query_columns, 3);
+            String query_columns = "SELECT TABLE_NAME, COLUMN_NAME FROM USER_TAB_COLUMNS WHERE TABLE_NAME LIKE '%" + row_table + "%'";
+            ArrayList<String> columns = operaciones.fill_array(query_columns, 2);
 
             for (String row_columns : columns) {
                 DefaultMutableTreeNode child_column = new DefaultMutableTreeNode(row_columns);
                 child_table.add(child_column);
-            }*/
+            }
+        }
+    }
+    
+
+    private void add_to_tree(DefaultMutableTreeNode views_node, String query, int columna) {
+        ArrayList<String> rows = operaciones.fill_array(query, columna);
+
+        for (String row : rows) {
+            DefaultMutableTreeNode child = new DefaultMutableTreeNode(row);
+            views_node.add(child);
         }
     }
 
