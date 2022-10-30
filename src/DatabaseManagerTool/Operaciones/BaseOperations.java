@@ -22,7 +22,7 @@ public class BaseOperations {
     private static PreparedStatement prepared_statement;
     private static ResultSet result;
     DefaultTableModel ModeloTabla;
-    
+
     public Conexion c;
 
     public BaseOperations() {
@@ -39,7 +39,7 @@ public class BaseOperations {
 
         } catch (HeadlessException | SQLException e) {
             System.out.println("Error: " + e);
-        } 
+        }
         return false;
     }
 
@@ -68,7 +68,7 @@ public class BaseOperations {
          */
 
         String[] fila = new String[_columnas.length];
-        
+
         ModeloTabla = new DefaultTableModel(null, _columnas) {
             @Override
             public boolean isCellEditable(int row, int colunm) {
@@ -78,12 +78,10 @@ public class BaseOperations {
 
         try {
             result = select(query);
-
             while (result.next()) {
-                for (int i = 1; i < fila.length; i++) {
-                    fila[i] = result.getString(i);
-                }
-
+                for (int i = 1; i < fila.length + 1; i++) {
+                    fila[i - 1] = result.getString(i);
+                }                
                 ModeloTabla.addRow(fila);
             }
 
@@ -108,7 +106,7 @@ public class BaseOperations {
                 datos.add(fila);
             }
             //System.out.println(fila);
-          
+
             c.disconect();
             return datos;
         } catch (SQLException e) {

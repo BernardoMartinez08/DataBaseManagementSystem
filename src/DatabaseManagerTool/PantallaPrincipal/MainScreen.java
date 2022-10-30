@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import DatabaseManagerTool.Operaciones.BaseOperations;
+import java.sql.SQLException;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.tree.TreePath;
 
 /**
  *
@@ -24,6 +28,7 @@ public class MainScreen extends javax.swing.JFrame {
         initComponents();
         conectar();
         cargarDBInformation();
+        fill_table_conexion();
     }
 
     String conection_name = "";
@@ -178,7 +183,6 @@ public class MainScreen extends javax.swing.JFrame {
 
     }
 
-    
     private void addTablas(DefaultMutableTreeNode tablas_node) {
         String query = "SELECT TABLE_NAME FROM USER_TABLES";
         ArrayList<String> tables = operaciones.fill_array(query, 1);
@@ -197,7 +201,6 @@ public class MainScreen extends javax.swing.JFrame {
             }
         }
     }
-    
 
     private void add_to_tree(DefaultMutableTreeNode views_node, String query, int columna) {
         ArrayList<String> rows = operaciones.fill_array(query, columna);
@@ -206,6 +209,41 @@ public class MainScreen extends javax.swing.JFrame {
             DefaultMutableTreeNode child = new DefaultMutableTreeNode(row);
             views_node.add(child);
         }
+    }
+
+    public void fill_table_conexion() {
+        String[] fila = new String[2];
+        String[] columnas = {"ID", "VALUE"};
+
+        DefaultTableModel ModeloTabla = new DefaultTableModel(null, columnas) {
+            @Override
+            public boolean isCellEditable(int row, int colunm) {
+                return false;
+            }
+        };
+
+        fila[0] = "NAME";
+        fila[1] = this.conexion_actual.conexion.getNAME();
+        ModeloTabla.addRow(fila);
+
+        fila[0] = "USER";
+        fila[1] = this.conexion_actual.conexion.getUSER();
+        ModeloTabla.addRow(fila);
+
+        fila[0] = "HOST";
+        fila[1] = this.conexion_actual.conexion.getHOST();
+        ModeloTabla.addRow(fila);
+
+        fila[0] = "PORT";
+        fila[1] = this.conexion_actual.conexion.getPORT();
+        ModeloTabla.addRow(fila);
+
+        fila[0] = "SID";
+        fila[1] = this.conexion_actual.conexion.getSID();
+        ModeloTabla.addRow(fila);
+
+        jTableSession.setModel(ModeloTabla);
+
     }
 
     /**
@@ -230,11 +268,11 @@ public class MainScreen extends javax.swing.JFrame {
         jTableSession = new javax.swing.JTable();
         jTabbedPane_TableData = new javax.swing.JTabbedPane();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableData = new javax.swing.JTable();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        jTableInfo = new javax.swing.JTable();
         jScrollPane6 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jTextAreaQuery = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
@@ -259,6 +297,11 @@ public class MainScreen extends javax.swing.JFrame {
         jPanelMainScreen.setPreferredSize(new java.awt.Dimension(1920, 180));
         jPanelMainScreen.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jTree_BDsInfo.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
+                jTree_BDsInfoValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTree_BDsInfo);
 
         jPanelMainScreen.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 210, 430));
@@ -310,7 +353,7 @@ public class MainScreen extends javax.swing.JFrame {
 
         jPanelMainScreen.add(jTabbedPane_TableInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 510, 210, 300));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableData.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -321,11 +364,11 @@ public class MainScreen extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane4.setViewportView(jTable1);
+        jScrollPane4.setViewportView(jTableData);
 
         jTabbedPane_TableData.addTab("Data", jScrollPane4);
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        jTableInfo.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -336,13 +379,13 @@ public class MainScreen extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane5.setViewportView(jTable2);
+        jScrollPane5.setViewportView(jTableInfo);
 
         jTabbedPane_TableData.addTab("Information", jScrollPane5);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane6.setViewportView(jTextArea1);
+        jTextAreaQuery.setColumns(20);
+        jTextAreaQuery.setRows(5);
+        jScrollPane6.setViewportView(jTextAreaQuery);
 
         jTabbedPane_TableData.addTab("Query", jScrollPane6);
 
@@ -396,6 +439,47 @@ public class MainScreen extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    String table = "";
+    private void jTree_BDsInfoValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTree_BDsInfoValueChanged
+        // TODO add your handling code here:
+        TreePath path = jTree_BDsInfo.getSelectionPath();
+        Object[] nodos;
+        TreePath padre;
+        try {
+            nodos = path.getPath();
+            padre = path.getParentPath();
+
+            if (padre.getLastPathComponent().toString().equals("TABLES")) {
+                table = nodos[nodos.length - 1].toString();
+                
+                
+                //Informacion en tabla Columns
+                String query = "SELECT COLUMN_ID, COLUMN_NAME, DATA_TYPE FROM USER_TAB_COLUMNS WHERE TABLE_NAME = '" + table + "'";
+                String[] columns = {"ID", "NAME", "TYPE"};
+                this.operaciones.fill_table(query, columns, jTableColumns);
+
+                
+                //Informacion en tabla Data
+                String[] columns_datos = new String[jTableColumns.getRowCount()];
+                for (int i = 0; i < jTableColumns.getRowCount(); i++) {
+                    columns_datos[i] = jTableColumns.getValueAt(i, 1).toString();
+                }
+                String query_select_datos = "SELECT * FROM " + table;
+                System.out.println(table);
+                this.operaciones.fill_table(query_select_datos, columns_datos, jTableData);
+                
+                
+                //Informacion en tabla Constrains
+                String query_constrains = "SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE , TABLE_NAME FROM USER_CONSTRAINTS WHERE TABLE_NAME = '" + table + "' AND CONSTRAINT_TYPE != 'C'";
+                String[] columns_constrais = {"CONSTRAINT_NAME"};
+                this.operaciones.fill_table(query_constrains, columns_constrais, jTableConstrains);
+            }
+
+        } catch (Exception e) {
+
+        }
+    }//GEN-LAST:event_jTree_BDsInfoValueChanged
 
     /**
      * @param args the command line arguments
@@ -452,14 +536,14 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPaneStatus;
     private javax.swing.JTabbedPane jTabbedPane_TableData;
     private javax.swing.JTabbedPane jTabbedPane_TableInfo;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JTable jTableColumns;
     private javax.swing.JTable jTableConstrains;
+    private javax.swing.JTable jTableData;
+    private javax.swing.JTable jTableInfo;
     private javax.swing.JTable jTableSession;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTextArea jTextAreaQuery;
     private javax.swing.JTextArea jTextAreaStatus;
     private javax.swing.JTree jTree_BDsInfo;
     // End of variables declaration//GEN-END:variables
