@@ -6,6 +6,7 @@ package DatabaseManagerTool.PantallaPrincipal;
 
 import DatabaseManagerTool.ModuloConexion.Conexion;
 import DatabaseManagerTool.ModuloConexion.CurrentConnection;
+import DatabaseManagerTool.PantallaConexiones.ConnectionScreen;
 import java.util.ArrayList;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -284,6 +285,7 @@ public class MainScreen extends javax.swing.JFrame {
         jScrollPane8 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
+        jbtDesconectar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1690, 840));
@@ -432,7 +434,18 @@ public class MainScreen extends javax.swing.JFrame {
         jPanelMainScreen.add(jTabbedPaneStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 690, 1430, 120));
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/DatabaseManagerTool/Recursos/Logos/Oracle-logo.png"))); // NOI18N
-        jPanelMainScreen.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1450, 10, 210, 80));
+        jPanelMainScreen.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1450, 10, 210, 30));
+
+        jbtDesconectar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jbtDesconectar.setForeground(new java.awt.Color(102, 102, 102));
+        jbtDesconectar.setText("DISCONNECT");
+        jbtDesconectar.setActionCommand("");
+        jbtDesconectar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtDesconectarActionPerformed(evt);
+            }
+        });
+        jPanelMainScreen.add(jbtDesconectar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1510, 50, 150, 40));
 
         getContentPane().add(jPanelMainScreen, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1680, 870));
         jPanelMainScreen.getAccessibleContext().setAccessibleDescription("");
@@ -466,7 +479,6 @@ public class MainScreen extends javax.swing.JFrame {
                     columns_datos[i] = jTableColumns.getValueAt(i, 1).toString();
                 }
                 String query_select_datos = "SELECT * FROM " + table;
-                System.out.println(table);
                 this.operaciones.fill_table(query_select_datos, columns_datos, jTableData);
                 
                 
@@ -480,6 +492,14 @@ public class MainScreen extends javax.swing.JFrame {
 
         }
     }//GEN-LAST:event_jTree_BDsInfoValueChanged
+
+    private void jbtDesconectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtDesconectarActionPerformed
+        // TODO add your handling code here:
+        ConnectionScreen connection_screen = new ConnectionScreen();
+        conexion_actual.desconectar();
+        connection_screen.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jbtDesconectarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -546,5 +566,6 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextAreaQuery;
     private javax.swing.JTextArea jTextAreaStatus;
     private javax.swing.JTree jTree_BDsInfo;
+    private javax.swing.JButton jbtDesconectar;
     // End of variables declaration//GEN-END:variables
 }

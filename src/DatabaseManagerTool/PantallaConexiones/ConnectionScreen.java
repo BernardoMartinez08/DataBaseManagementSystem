@@ -7,6 +7,7 @@ package DatabaseManagerTool.PantallaConexiones;
 import javax.swing.JOptionPane;
 import DatabaseManagerTool.ModuloConexion.CurrentConnection;
 import DatabaseManagerTool.ModuloConexion.Conexion;
+import DatabaseManagerTool.PantallaPrincipal.MainScreen;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
@@ -369,6 +370,9 @@ public class ConnectionScreen extends javax.swing.JFrame {
     private void jbtCreateUser2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtCreateUser2ActionPerformed
         // TODO add your handling code here:
         conectar();
+        MainScreen main_screen = new MainScreen();
+        main_screen.setVisible(true);
+        dispose();
     }//GEN-LAST:event_jbtCreateUser2ActionPerformed
 
     private void jTreeConnectiosValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTreeConnectiosValueChanged
