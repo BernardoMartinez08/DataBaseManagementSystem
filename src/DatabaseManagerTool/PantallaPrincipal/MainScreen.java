@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import DatabaseManagerTool.Operaciones.BaseOperations;
-import java.sql.SQLException;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.TreePath;
 
@@ -49,12 +47,8 @@ public class MainScreen extends javax.swing.JFrame {
     public void conectar() {
         CurrentConnection auxCurrentCon = new CurrentConnection(conection_name, host, port, sid, user, password);
         Conexion auxCon = auxCurrentCon.searchCurrentConnection();
-
         conexion_actual = new CurrentConnection(auxCon.getNAME(), auxCon.getHOST(), auxCon.getPORT(), auxCon.getSID(), auxCon.getUSER(), auxCon.getPASSWORD());
-
         conexion_actual.conectar();
-        System.out.println(conexion_actual.conexion.getPORT());
-
         operaciones.c = conexion_actual.conexion;
     }
 
@@ -203,12 +197,12 @@ public class MainScreen extends javax.swing.JFrame {
         }
     }
 
-    private void add_to_tree(DefaultMutableTreeNode views_node, String query, int columna) {
+    private void add_to_tree(DefaultMutableTreeNode node, String query, int columna) {
         ArrayList<String> rows = operaciones.fill_array(query, columna);
 
         for (String row : rows) {
             DefaultMutableTreeNode child = new DefaultMutableTreeNode(row);
-            views_node.add(child);
+            node.add(child);
         }
     }
 

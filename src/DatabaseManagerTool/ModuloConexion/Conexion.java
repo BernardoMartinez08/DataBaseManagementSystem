@@ -69,9 +69,10 @@ public class Conexion {
         try {
             this.conexion.close();
             this.connection_status = "Conexion Terminada Correctamente.";
+            //JOptionPane.showMessageDialog(null, connection_status);
             return true;
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            JOptionPane.showMessageDialog(null, connection_status + e.getMessage());
             this.connection_status = e.getMessage() + ".";
             return false;
         }
@@ -201,7 +202,6 @@ public class Conexion {
             }
 
             connection_search_status = "Conexiones Encontradas Correctamente.";
-            System.out.println(connection_search_status);
             registro_conexion.close();
         } catch (IOException e) {
             connection_search_status = "Estamos teniendo problemas para extraer tus conexiones en el archivo de tus conexiones: " + e;
@@ -243,7 +243,6 @@ public class Conexion {
                     _conexion.setPASSWORD(_password);
 
                     connection_search_status = "Conexion Encontrada Correctamente.";
-                    System.out.println(connection_search_status);
                     registro_conexion.close();
                     founded = true;
                     return _conexion;

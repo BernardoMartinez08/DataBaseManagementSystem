@@ -78,6 +78,7 @@ public class BaseOperations {
 
         try {
             result = select(query);
+            
             while (result.next()) {
                 for (int i = 1; i < fila.length + 1; i++) {
                     fila[i - 1] = result.getString(i);
