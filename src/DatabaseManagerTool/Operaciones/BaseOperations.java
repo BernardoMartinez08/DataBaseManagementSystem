@@ -6,10 +6,19 @@ package DatabaseManagerTool.Operaciones;
 
 import DatabaseManagerTool.ModuloConexion.Conexion;
 import java.awt.HeadlessException;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -22,6 +31,9 @@ public class BaseOperations {
     private static PreparedStatement prepared_statement;
     private static ResultSet result;
     DefaultTableModel ModeloTabla;
+
+    public String num_results = "";
+    public String exeptions = "";
 
     public Conexion c;
 
@@ -39,6 +51,7 @@ public class BaseOperations {
 
         } catch (HeadlessException | SQLException e) {
             System.out.println("Error: " + e);
+            exeptions = "Error: " + e;
         }
         return false;
     }
@@ -52,20 +65,15 @@ public class BaseOperations {
 
         } catch (SQLException e) {
             System.out.println("Error: " + e);
+            exeptions = "Error: " + e;
         }
 
         return null;
     }
 
     public void fill_table(String query, String[] _columnas, JTable tabla) {
-        /*
-        String columnas_data = "";
-        for (String _columna : _columnas) {
-            columnas_data += StringUtils.toUpperCase(_columna);
-        }
-        
-        String[] columnas = {columnas_data};
-         */
+        num_results = "";
+        exeptions = "";
 
         String[] fila = new String[_columnas.length];
 
@@ -78,44 +86,232 @@ public class BaseOperations {
 
         try {
             result = select(query);
-            
+            ResultSetMetaData rsmd = result.getMetaData();
+
+            int resultados = 0;
+            String tabla_name = "";
+
             while (result.next()) {
                 for (int i = 1; i < fila.length + 1; i++) {
                     fila[i - 1] = result.getString(i);
-                }                
+                }
+                resultados++;
                 ModeloTabla.addRow(fila);
             }
 
+            num_results = "SE RECUPERARON: " + resultados + " RESULTADOS DE: " + rsmd.getColumnCount() + " COLUMNAS.";
+
             tabla.setModel(ModeloTabla);
+
             c.disconect();
 
         } catch (SQLException e) {
             System.out.println("Error: " + e);
+            exeptions = "Error: " + e;
         } finally {
             c.disconect();
         }
     }
 
     public ArrayList fill_array(String query, int columna) {
+        num_results = "";
+        exeptions = "";
         ArrayList datos = new ArrayList();
         String fila = "";
         try {
             result = select(query);
+            ResultSetMetaData rsmd = result.getMetaData();
 
+            int resultados = 0;
             while (result.next()) {
                 fila = result.getString(columna);
                 datos.add(fila);
+                resultados++;
             }
-            //System.out.println(fila);
+            num_results = "SE RECUPERARON: " + resultados + " RESULTADOS DE: " + rsmd.getColumnCount() + " COLUMNAS.";
 
             c.disconect();
             return datos;
         } catch (SQLException e) {
             System.out.println("Error: " + e);
+            exeptions = "Error: " + e;
         } finally {
             c.disconect();
         }
         return null;
     }
 
+    public void fill_data(String query, JTabbedPane panel, int n) {
+        try {
+            num_results = "";
+            exeptions = "";
+            result = select(query);
+            System.out.println("AQUIII");
+            if (result != null) {
+                ResultSetMetaData rsmd = result.getMetaData();
+                int num_columns = rsmd.getColumnCount();
+                System.out.println("\nNum Culumnas: " + num_columns);
+                
+                String columnas[] = new String[num_columns];
+
+                for (int i = 1; i <= num_columns; i++) {
+                    String _columna = rsmd.getColumnLabel(i);
+                    columnas[i - 1] = (_columna.toUpperCase());
+                }
+
+                String[] fila = new String[num_columns];
+
+                ModeloTabla = new DefaultTableModel(null, columnas) {
+                    @Override
+                    public boolean isCellEditable(int row, int colunm) {
+                        return false;
+                    }
+                };
+
+                int resultados = 0;
+                while (result.next()) {
+                    for (int i = 1; i < fila.length + 1; i++) {
+                        fila[i - 1] = result.getString(i);
+                    }
+                    ModeloTabla.addRow(fila);
+                    resultados++;
+                }
+
+                num_results = "SE RECUPERARON: " + resultados + " RESULTADOS DE: " + rsmd.getColumnCount() + " COLUMNAS.";
+
+                JTable tabla = new JTable();
+                tabla.setModel(ModeloTabla);
+
+                JScrollPane panel_scroll = null;
+                panel_scroll = new JScrollPane(tabla,
+                        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                        JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                tabla.setFillsViewportHeight(true);
+                tabla.setFillsViewportHeight(true);
+
+                panel.add("Result " + n, panel_scroll);
+            } else {
+                exeptions = "Error: RESULTADO FUE NULL";
+            }
+            c.disconect();
+
+        } catch (SQLException e) {
+            System.out.println("Error: " + e);
+            exeptions = "Error: " + e;
+        } finally {
+            c.disconect();
+        }
+    }
+
+    public void import_sqlfile_script(File file) {
+        FileReader fr = null;
+        try {
+
+            fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+            String linea = br.readLine();
+            String lineaBD = "";
+
+            while (linea != null) {
+                if (linea.length() != 0) {
+                    char Firstchar = linea.charAt(0);
+
+                    if (Firstchar != '/' && Firstchar != '-' && linea.length() != 0) {
+                        char LastChar = linea.charAt(linea.length() - 1);
+
+                        if (LastChar == ';') {
+                            linea = linea.substring(0, linea.length() - 1);
+                            PreparedStatement ps = c.conexion.prepareStatement(lineaBD + linea);
+                            ps.executeUpdate();
+                            ps.close();
+                            lineaBD = "";
+                            linea = br.readLine();
+                        } else {
+                            lineaBD += linea;
+                            linea = br.readLine();
+                        }
+                    } else {
+                        linea = br.readLine();
+                    }
+                } else {
+                    linea = br.readLine();
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "El documento que desea ejecutar, no fue encontrado", "ARCHIVOS NO ENCONTRADOS", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "El documento que desea ejecutar, no permitio la lectura de manera correcta", "ARCHIVOS NO PUEDIERON SER LEIDOS", JOptionPane.ERROR_MESSAGE);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "El script que desea extraer no fue posible de ejecutar", "ERROR DE SCRIPT", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void import_sqlfile_query(File file, JTabbedPane panel) {
+        FileReader fr = null;
+        try {
+
+            fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+            String linea = br.readLine();
+            String lineaBD = "";
+
+            int n = 0;
+            while (linea != null) {
+                if (linea.length() != 0) {
+                    char Firstchar = linea.charAt(0);
+
+                    if (Firstchar != '/' && Firstchar != '-' && linea.length() != 0) {
+                        char LastChar = linea.charAt(linea.length() - 1);
+
+                        if (LastChar == ';') {
+                            linea = linea.substring(0, linea.length() - 1);
+                            String query = lineaBD + linea;
+                            fill_data(query, panel, n);
+                            lineaBD = "";
+                            linea = br.readLine();
+                            n++;
+                        } else {
+                            lineaBD += linea;
+                            linea = br.readLine();
+                        }
+                    } else {
+                        linea = br.readLine();
+                    }
+                } else {
+                    linea = br.readLine();
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "El documento que desea ejecutar, no fue encontrado", "ARCHIVOS NO ENCONTRADOS", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "El documento que desea ejecutar, no permitio la lectura de manera correcta", "ARCHIVOS NO PUEDIERON SER LEIDOS", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void split_querys(String querys, JTabbedPane panel) {
+        String[] lineas = querys.split("\n");
+        String lineaBD = "";
+        int n = 0;
+        for(String linea : lineas) {
+            if (linea.length() != 0) {
+                char Firstchar = linea.charAt(0);
+                
+                if (Firstchar != '/' && Firstchar != '-' && linea.length() != 0) {
+                    char LastChar = linea.charAt(linea.length() - 1);
+                    
+                    if (LastChar == ';') {
+                        linea = linea.substring(0, linea.length() - 1);
+                        String query = lineaBD + linea;
+                        System.out.println("\n\nQuery: " + query);
+                        fill_data(query, panel, n);
+                        lineaBD = "";
+                        n++;
+                    } else {
+                        lineaBD += linea;
+                    } 
+                }
+            }
+        }
+    }
 }
+

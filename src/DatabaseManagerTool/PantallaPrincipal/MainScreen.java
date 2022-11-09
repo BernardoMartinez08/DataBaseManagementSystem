@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import DatabaseManagerTool.Operaciones.BaseOperations;
+import java.io.File;
+import javax.swing.JFileChooser;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.TreePath;
 
@@ -241,6 +243,16 @@ public class MainScreen extends javax.swing.JFrame {
 
     }
 
+    public void extract_sqlfile() {
+        JFileChooser file_chooser = new JFileChooser();
+        file_chooser.showOpenDialog(this);
+        File fileChoosed = file_chooser.getSelectedFile();
+
+        if (fileChoosed != null) {
+            //ejecutar query
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -270,9 +282,7 @@ public class MainScreen extends javax.swing.JFrame {
         jTextAreaQuery = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        jScrollPane7 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        jTabbedPaneResults = new javax.swing.JTabbedPane();
         jTabbedPaneStatus = new javax.swing.JTabbedPane();
         jScrollPane9 = new javax.swing.JScrollPane();
         jTextAreaStatus = new javax.swing.JTextArea();
@@ -280,6 +290,9 @@ public class MainScreen extends javax.swing.JFrame {
         jTextArea2 = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
         jbtDesconectar = new javax.swing.JButton();
+        jBtImportScript = new javax.swing.JButton();
+        jBtExecute = new javax.swing.JButton();
+        jBtImportSql2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1690, 840));
@@ -381,6 +394,18 @@ public class MainScreen extends javax.swing.JFrame {
 
         jTextAreaQuery.setColumns(20);
         jTextAreaQuery.setRows(5);
+        jTextAreaQuery.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                jTextAreaQueryInputMethodTextChanged(evt);
+            }
+        });
+        jTextAreaQuery.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextAreaQueryKeyPressed(evt);
+            }
+        });
         jScrollPane6.setViewportView(jTextAreaQuery);
 
         jTabbedPane_TableData.addTab("Query", jScrollPane6);
@@ -395,23 +420,7 @@ public class MainScreen extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 153, 153));
         jLabel2.setText("Sistema de manejo de base de datos de Oracle");
         jPanelMainScreen.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 400, -1));
-
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane7.setViewportView(jTable3);
-
-        jTabbedPane1.addTab("Results", jScrollPane7);
-
-        jPanelMainScreen.add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 450, 1430, 230));
+        jPanelMainScreen.add(jTabbedPaneResults, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 450, 1430, 230));
 
         jTextAreaStatus.setColumns(20);
         jTextAreaStatus.setRows(5);
@@ -441,6 +450,27 @@ public class MainScreen extends javax.swing.JFrame {
         });
         jPanelMainScreen.add(jbtDesconectar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1510, 50, 150, 40));
 
+        jBtImportScript.setBackground(new java.awt.Color(255, 102, 102));
+        jBtImportScript.setForeground(new java.awt.Color(255, 255, 255));
+        jBtImportScript.setText("IMPORT SCRIPT");
+        jPanelMainScreen.add(jBtImportScript, new org.netbeans.lib.awtextra.AbsoluteConstraints(1380, 60, -1, -1));
+
+        jBtExecute.setBackground(new java.awt.Color(255, 102, 102));
+        jBtExecute.setForeground(new java.awt.Color(255, 255, 255));
+        jBtExecute.setText("EXECUTE");
+        jBtExecute.setEnabled(false);
+        jBtExecute.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtExecuteActionPerformed(evt);
+            }
+        });
+        jPanelMainScreen.add(jBtExecute, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 50, -1, -1));
+
+        jBtImportSql2.setBackground(new java.awt.Color(255, 102, 102));
+        jBtImportSql2.setForeground(new java.awt.Color(255, 255, 255));
+        jBtImportSql2.setText("IMPORT SQL");
+        jPanelMainScreen.add(jBtImportSql2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1280, 60, -1, -1));
+
         getContentPane().add(jPanelMainScreen, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1680, 870));
         jPanelMainScreen.getAccessibleContext().setAccessibleDescription("");
 
@@ -459,14 +489,15 @@ public class MainScreen extends javax.swing.JFrame {
 
             if (padre.getLastPathComponent().toString().equals("TABLES")) {
                 table = nodos[nodos.length - 1].toString();
-                
-                
+
                 //Informacion en tabla Columns
                 String query = "SELECT COLUMN_ID, COLUMN_NAME, DATA_TYPE FROM USER_TAB_COLUMNS WHERE TABLE_NAME = '" + table + "'";
                 String[] columns = {"ID", "NAME", "TYPE"};
                 this.operaciones.fill_table(query, columns, jTableColumns);
 
-                
+                String _status = jTextAreaStatus.getText() + "\n\n" + operaciones.num_results;
+                jTextAreaStatus.setText(_status);
+
                 //Informacion en tabla Data
                 String[] columns_datos = new String[jTableColumns.getRowCount()];
                 for (int i = 0; i < jTableColumns.getRowCount(); i++) {
@@ -474,12 +505,17 @@ public class MainScreen extends javax.swing.JFrame {
                 }
                 String query_select_datos = "SELECT * FROM " + table;
                 this.operaciones.fill_table(query_select_datos, columns_datos, jTableData);
-                
-                
+
+                _status = jTextAreaStatus.getText() + "\n\n" + operaciones.num_results;
+                jTextAreaStatus.setText(_status);
+
                 //Informacion en tabla Constrains
                 String query_constrains = "SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE , TABLE_NAME FROM USER_CONSTRAINTS WHERE TABLE_NAME = '" + table + "' AND CONSTRAINT_TYPE != 'C'";
                 String[] columns_constrais = {"CONSTRAINT_NAME"};
                 this.operaciones.fill_table(query_constrains, columns_constrais, jTableConstrains);
+
+                _status = jTextAreaStatus.getText() + "\n\n" + operaciones.num_results;
+                jTextAreaStatus.setText(_status);
             }
 
         } catch (Exception e) {
@@ -494,6 +530,30 @@ public class MainScreen extends javax.swing.JFrame {
         connection_screen.setVisible(true);
         dispose();
     }//GEN-LAST:event_jbtDesconectarActionPerformed
+
+
+    private void jBtExecuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtExecuteActionPerformed
+        // TODO add your handling code here:
+        String query = jTextAreaQuery.getText();
+        operaciones.split_querys(query, jTabbedPaneResults);
+
+        String _status = jTextAreaStatus.getText() + "\n\n" + operaciones.num_results;
+        jTextAreaStatus.setText(_status);
+    }//GEN-LAST:event_jBtExecuteActionPerformed
+
+    private void jTextAreaQueryInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jTextAreaQueryInputMethodTextChanged
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jTextAreaQueryInputMethodTextChanged
+
+    private void jTextAreaQueryKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextAreaQueryKeyPressed
+        // TODO add your handling code here:
+        if (jTextAreaQuery.getText().isEmpty()) {
+            jBtExecute.setEnabled(false);
+        } else {
+            jBtExecute.setEnabled(true);
+        }
+    }//GEN-LAST:event_jTextAreaQueryKeyPressed
 
     /**
      * @param args the command line arguments
@@ -531,6 +591,9 @@ public class MainScreen extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBtExecute;
+    private javax.swing.JButton jBtImportScript;
+    private javax.swing.JButton jBtImportSql2;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -543,14 +606,12 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTabbedPane jTabbedPaneResults;
     private javax.swing.JTabbedPane jTabbedPaneStatus;
     private javax.swing.JTabbedPane jTabbedPane_TableData;
     private javax.swing.JTabbedPane jTabbedPane_TableInfo;
-    private javax.swing.JTable jTable3;
     private javax.swing.JTable jTableColumns;
     private javax.swing.JTable jTableConstrains;
     private javax.swing.JTable jTableData;
