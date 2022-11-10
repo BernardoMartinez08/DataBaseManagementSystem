@@ -277,8 +277,6 @@ public class MainScreen extends javax.swing.JFrame {
         jTabbedPane_TableData = new javax.swing.JTabbedPane();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTableData = new javax.swing.JTable();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        jTableInfo = new javax.swing.JTable();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTextAreaQuery = new javax.swing.JTextArea();
         jScrollPane7 = new javax.swing.JScrollPane();
@@ -381,21 +379,6 @@ public class MainScreen extends javax.swing.JFrame {
         jScrollPane4.setViewportView(jTableData);
 
         jTabbedPane_TableData.addTab("Data", jScrollPane4);
-
-        jTableInfo.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane5.setViewportView(jTableInfo);
-
-        jTabbedPane_TableData.addTab("Information", jScrollPane5);
 
         jTextAreaQuery.setColumns(20);
         jTextAreaQuery.setRows(5);
@@ -632,20 +615,6 @@ public class MainScreen extends javax.swing.JFrame {
         operaciones.split_querys(query, jTabbedPaneResults, jTextAreaStatus, jTextAreaExceptions);
     }//GEN-LAST:event_jBtExecuteActionPerformed
 
-    private void jTextAreaQueryInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jTextAreaQueryInputMethodTextChanged
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_jTextAreaQueryInputMethodTextChanged
-
-    private void jTextAreaQueryKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextAreaQueryKeyPressed
-        // TODO add your handling code here:
-        if (jTextAreaQuery.getText().isEmpty()) {
-            jBtExecute.setEnabled(false);
-        } else {
-            jBtExecute.setEnabled(true);
-        }
-    }//GEN-LAST:event_jTextAreaQueryKeyPressed
-
     private void jBtImportScriptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtImportScriptActionPerformed
         // TODO add your handling code here:
         File script = extract_sqlfile();
@@ -669,6 +638,19 @@ public class MainScreen extends javax.swing.JFrame {
         // TODO add your handling code here:
         jTabbedPaneResults.removeAll();
     }//GEN-LAST:event_jBtClearResults1ActionPerformed
+
+    private void jTextAreaQueryKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextAreaQueryKeyPressed
+        // TODO add your handling code here:
+        if (jTextAreaQuery.getText().isEmpty()) {
+            jBtExecute.setEnabled(false);
+        } else {
+            jBtExecute.setEnabled(true);
+        }
+    }//GEN-LAST:event_jTextAreaQueryKeyPressed
+
+    private void jTextAreaQueryInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jTextAreaQueryInputMethodTextChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextAreaQueryInputMethodTextChanged
 
     /**
      * @param args the command line arguments
@@ -721,7 +703,6 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
@@ -733,7 +714,6 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JTable jTableColumns;
     private javax.swing.JTable jTableConstrains;
     private javax.swing.JTable jTableData;
-    private javax.swing.JTable jTableInfo;
     private javax.swing.JTable jTableSession;
     private javax.swing.JTextArea jTextAreaDDL;
     private javax.swing.JTextArea jTextAreaExceptions;
