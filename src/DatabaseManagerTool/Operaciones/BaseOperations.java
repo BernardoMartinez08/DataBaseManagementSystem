@@ -142,6 +142,28 @@ public class BaseOperations {
         return null;
     }
 
+    public void fill_text_area(String query, JTextArea text_area) {
+        try {
+            result = select(query);
+            ResultSetMetaData rsmd = result.getMetaData();
+            while (result.next()) {
+
+                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                    String fila = result.getString(i);
+                    text_area.append(fila + "\n");
+                }
+            }
+
+            c.disconect();
+
+        } catch (SQLException e) {
+            System.out.println("Error: " + e);
+            exeptions = "Error: " + e;
+        } finally {
+            c.disconect();
+        }
+    }
+
     public void fill_data(String query, JTabbedPane panel, int n, JTextArea status, JTextArea exception) {
         try {
             num_results = "";

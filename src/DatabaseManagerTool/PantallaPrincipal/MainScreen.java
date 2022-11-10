@@ -281,6 +281,8 @@ public class MainScreen extends javax.swing.JFrame {
         jTableInfo = new javax.swing.JTable();
         jScrollPane6 = new javax.swing.JScrollPane();
         jTextAreaQuery = new javax.swing.JTextArea();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        jTextAreaDDL = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jTabbedPaneResults = new javax.swing.JTabbedPane();
@@ -412,6 +414,13 @@ public class MainScreen extends javax.swing.JFrame {
         jScrollPane6.setViewportView(jTextAreaQuery);
 
         jTabbedPane_TableData.addTab("Query", jScrollPane6);
+
+        jTextAreaDDL.setColumns(20);
+        jTextAreaDDL.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jTextAreaDDL.setRows(5);
+        jScrollPane7.setViewportView(jTextAreaDDL);
+
+        jTabbedPane_TableData.addTab("DDL", jScrollPane7);
 
         jPanelMainScreen.add(jTabbedPane_TableData, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 70, 1430, 370));
 
@@ -549,8 +558,60 @@ public class MainScreen extends javax.swing.JFrame {
 
                 _status = jTextAreaStatus.getText() + "\n\n" + operaciones.num_results;
                 jTextAreaStatus.setText(_status);
+                
+                
+                //Informacion de tabla ddl
+                String query_ddl = "SELECT dbms_metadata.get_ddl('TABLE', '" + table + "', '" + user + "') FROM dual";
+                this.operaciones.fill_text_area(query_ddl, jTextAreaDDL);
+            }
+            
+            if (padre.getLastPathComponent().toString().equals("VIEWS")) {
+                String view = nodos[nodos.length - 1].toString();              
+                
+                //Informacion de tabla ddl
+                String query_ddl = "SELECT dbms_metadata.get_ddl('VIEW', '" + view + "', '" + user + "') FROM dual";
+                this.operaciones.fill_text_area(query_ddl, jTextAreaDDL);
+            }
+            
+            if (padre.getLastPathComponent().toString().equals("PACKAGES")) {
+                String _package = nodos[nodos.length - 1].toString();              
+                
+                //Informacion de tabla ddl
+                String query_ddl = "SELECT dbms_metadata.get_ddl('PACKAGE', '" + _package + "', '" + user + "') FROM dual";
+                this.operaciones.fill_text_area(query_ddl, jTextAreaDDL);
             }
 
+            if (padre.getLastPathComponent().toString().equals("SECUENCES")) {
+                String secuence = nodos[nodos.length - 1].toString();              
+                
+                //Informacion de tabla ddl
+                String query_ddl = "SELECT dbms_metadata.get_ddl('SEQUENCE', '" + secuence + "', '" + user + "') FROM dual";
+                this.operaciones.fill_text_area(query_ddl, jTextAreaDDL);
+            }
+            
+            if (padre.getLastPathComponent().toString().equals("TRIGGERS")) {
+                String trigger = nodos[nodos.length - 1].toString();              
+                
+                //Informacion de tabla ddl
+                String query_ddl = "SELECT dbms_metadata.get_ddl('TRIGGER', '" + trigger + "', '" + user + "') FROM dual";
+                this.operaciones.fill_text_area(query_ddl, jTextAreaDDL);
+            }
+            
+            if (padre.getLastPathComponent().toString().equals("INDEXES")) {
+                String index = nodos[nodos.length - 1].toString();              
+                
+                //Informacion de tabla ddl
+                String query_ddl = "SELECT dbms_metadata.get_ddl('INDEX', '" + index + "', '" + user + "') FROM dual";
+                this.operaciones.fill_text_area(query_ddl, jTextAreaDDL);
+            }
+            
+            if (padre.getLastPathComponent().toString().equals("PACKAGES") || padre.getLastPathComponent().toString().equals("STORED PROCEDURES") || padre.getLastPathComponent().toString().equals("FUNCTIONS")) {
+                String procedure = nodos[nodos.length - 1].toString();              
+                
+                //Informacion de tabla ddl
+                String query_ddl = "SELECT dbms_metadata.get_ddl('PROCEDURE', '" + procedure + "', '" + user + "') FROM dual";
+                this.operaciones.fill_text_area(query_ddl, jTextAreaDDL);
+            }
         } catch (Exception e) {
 
         }
@@ -569,12 +630,6 @@ public class MainScreen extends javax.swing.JFrame {
         // TODO add your handling code here:
         String query = jTextAreaQuery.getText();
         operaciones.split_querys(query, jTabbedPaneResults, jTextAreaStatus, jTextAreaExceptions);
-
-        String _status = jTextAreaStatus.getText() + operaciones.num_results + "\n\n";
-        jTextAreaStatus.setText(_status);
-        
-        String _exeptions = jTextAreaExceptions.getText() + operaciones.exeptions + "\n\n";
-        jTextAreaExceptions.setText(_exeptions);
     }//GEN-LAST:event_jBtExecuteActionPerformed
 
     private void jTextAreaQueryInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jTextAreaQueryInputMethodTextChanged
@@ -668,6 +723,7 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JTabbedPane jTabbedPaneResults;
@@ -679,6 +735,7 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JTable jTableData;
     private javax.swing.JTable jTableInfo;
     private javax.swing.JTable jTableSession;
+    private javax.swing.JTextArea jTextAreaDDL;
     private javax.swing.JTextArea jTextAreaExceptions;
     private javax.swing.JTextArea jTextAreaQuery;
     private javax.swing.JTextArea jTextAreaStatus;
