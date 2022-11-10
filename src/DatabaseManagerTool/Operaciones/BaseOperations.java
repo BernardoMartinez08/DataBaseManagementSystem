@@ -142,7 +142,7 @@ public class BaseOperations {
         return null;
     }
 
-    public void fill_data(String query, JTabbedPane panel, int n) {
+    public void fill_data(String query, JTabbedPane panel, int n, JTextArea status, JTextArea exception) {
         try {
             num_results = "";
             exeptions = "";
@@ -150,7 +150,7 @@ public class BaseOperations {
             if (result != null) {
                 ResultSetMetaData rsmd = result.getMetaData();
                 int num_columns = rsmd.getColumnCount();
-                
+
                 String columnas[] = new String[num_columns];
 
                 for (int i = 1; i <= num_columns; i++) {
@@ -177,6 +177,12 @@ public class BaseOperations {
                 }
 
                 num_results = "SE RECUPERARON: " + resultados + " RESULTADOS DE: " + rsmd.getColumnCount() + " COLUMNAS.";
+
+                String _status = status.getText() + num_results + "\n\n";
+                status.setText(_status);
+
+                String _exeptions = exception.getText() + exeptions + "\n\n";
+                exception.setText(_exeptions);
 
                 JTable tabla = new JTable();
                 tabla.setModel(ModeloTabla);
@@ -246,7 +252,7 @@ public class BaseOperations {
         }
     }
 
-    public void import_sqlfile_query(File file, JTabbedPane panel, JTextArea text_area) {
+    public void import_sqlfile_query(File file, JTabbedPane panel, JTextArea text_area, JTextArea st, JTextArea exep) {
         FileReader fr = null;
         try {
 
@@ -266,8 +272,8 @@ public class BaseOperations {
                         if (LastChar == ';') {
                             linea = linea.substring(0, linea.length() - 1);
                             String query = lineaBD + linea;
-                            text_area.append("\n" + query);
-                            fill_data(query, panel, n);
+                            text_area.append(query + "\n");
+                            fill_data(query, panel, n, st, exep);
                             lineaBD = "";
                             linea = br.readLine();
                             n++;
@@ -289,30 +295,28 @@ public class BaseOperations {
         }
     }
 
-    public void split_querys(String querys, JTabbedPane panel) {
+    public void split_querys(String querys, JTabbedPane panel, JTextArea st, JTextArea exep) {
         String[] lineas = querys.split("\n");
         String lineaBD = "";
         int n = 0;
-        for(String linea : lineas) {
+        for (String linea : lineas) {
             if (linea.length() != 0) {
                 char Firstchar = linea.charAt(0);
-                
+
                 if (Firstchar != '/' && Firstchar != '-' && linea.length() != 0) {
                     char LastChar = linea.charAt(linea.length() - 1);
-                    
+
                     if (LastChar == ';') {
                         linea = linea.substring(0, linea.length() - 1);
                         String query = lineaBD + linea;
-                        System.out.println("\n\nQuery: " + query);
-                        fill_data(query, panel, n);
+                        fill_data(query, panel, n, st, exep);
                         lineaBD = "";
                         n++;
                     } else {
                         lineaBD += linea;
-                    } 
+                    }
                 }
             }
         }
     }
 }
-

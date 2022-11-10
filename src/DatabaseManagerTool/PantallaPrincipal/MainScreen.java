@@ -568,7 +568,7 @@ public class MainScreen extends javax.swing.JFrame {
     private void jBtExecuteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtExecuteActionPerformed
         // TODO add your handling code here:
         String query = jTextAreaQuery.getText();
-        operaciones.split_querys(query, jTabbedPaneResults);
+        operaciones.split_querys(query, jTabbedPaneResults, jTextAreaStatus, jTextAreaExceptions);
 
         String _status = jTextAreaStatus.getText() + operaciones.num_results + "\n\n";
         jTextAreaStatus.setText(_status);
@@ -596,25 +596,13 @@ public class MainScreen extends javax.swing.JFrame {
         File script = extract_sqlfile();
         
         operaciones.import_sqlfile_script(script, jTextAreaQuery);
-                
-        String _status = jTextAreaStatus.getText() + operaciones.num_results + "\n\n" ;
-        jTextAreaStatus.setText(_status);
-        
-        String _exeptions = jTextAreaExceptions.getText() + operaciones.exeptions + "\n\n";
-        jTextAreaExceptions.setText(_exeptions);
     }//GEN-LAST:event_jBtImportScriptActionPerformed
 
     private void jBtImportSql2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtImportSql2ActionPerformed
         // TODO add your handling code here:
         File querys = extract_sqlfile();
         
-        operaciones.import_sqlfile_query(querys, jTabbedPaneResults, jTextAreaQuery);
-                
-        String _status = jTextAreaStatus.getText() + operaciones.num_results + "\n\n";
-        jTextAreaStatus.setText(_status);
-        
-        String _exeptions = jTextAreaExceptions.getText() + operaciones.exeptions + "\n\n";
-        jTextAreaExceptions.setText(_exeptions);
+        operaciones.import_sqlfile_query(querys, jTabbedPaneResults, jTextAreaQuery, jTextAreaStatus, jTextAreaExceptions);
     }//GEN-LAST:event_jBtImportSql2ActionPerformed
 
     private void jBtUpdateDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtUpdateDBActionPerformed
