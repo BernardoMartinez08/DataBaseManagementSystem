@@ -243,14 +243,15 @@ public class MainScreen extends javax.swing.JFrame {
 
     }
 
-    public void extract_sqlfile() {
+    public File extract_sqlfile() {
         JFileChooser file_chooser = new JFileChooser();
         file_chooser.showOpenDialog(this);
         File fileChoosed = file_chooser.getSelectedFile();
 
         if (fileChoosed != null) {
-            //ejecutar query
+            return fileChoosed;
         }
+        return null;
     }
 
     /**
@@ -287,12 +288,14 @@ public class MainScreen extends javax.swing.JFrame {
         jScrollPane9 = new javax.swing.JScrollPane();
         jTextAreaStatus = new javax.swing.JTextArea();
         jScrollPane8 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        jTextAreaExceptions = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
         jbtDesconectar = new javax.swing.JButton();
         jBtImportScript = new javax.swing.JButton();
         jBtExecute = new javax.swing.JButton();
         jBtImportSql2 = new javax.swing.JButton();
+        jBtUpdateDB = new javax.swing.JButton();
+        jBtClearResults1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1690, 840));
@@ -428,9 +431,9 @@ public class MainScreen extends javax.swing.JFrame {
 
         jTabbedPaneStatus.addTab("Status", jScrollPane9);
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane8.setViewportView(jTextArea2);
+        jTextAreaExceptions.setColumns(20);
+        jTextAreaExceptions.setRows(5);
+        jScrollPane8.setViewportView(jTextAreaExceptions);
 
         jTabbedPaneStatus.addTab("Exceptions", jScrollPane8);
 
@@ -453,7 +456,12 @@ public class MainScreen extends javax.swing.JFrame {
         jBtImportScript.setBackground(new java.awt.Color(255, 102, 102));
         jBtImportScript.setForeground(new java.awt.Color(255, 255, 255));
         jBtImportScript.setText("IMPORT SCRIPT");
-        jPanelMainScreen.add(jBtImportScript, new org.netbeans.lib.awtextra.AbsoluteConstraints(1380, 60, -1, -1));
+        jBtImportScript.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtImportScriptActionPerformed(evt);
+            }
+        });
+        jPanelMainScreen.add(jBtImportScript, new org.netbeans.lib.awtextra.AbsoluteConstraints(1380, 50, -1, -1));
 
         jBtExecute.setBackground(new java.awt.Color(255, 102, 102));
         jBtExecute.setForeground(new java.awt.Color(255, 255, 255));
@@ -464,12 +472,37 @@ public class MainScreen extends javax.swing.JFrame {
                 jBtExecuteActionPerformed(evt);
             }
         });
-        jPanelMainScreen.add(jBtExecute, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 50, -1, -1));
+        jPanelMainScreen.add(jBtExecute, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 50, -1, -1));
 
         jBtImportSql2.setBackground(new java.awt.Color(255, 102, 102));
         jBtImportSql2.setForeground(new java.awt.Color(255, 255, 255));
         jBtImportSql2.setText("IMPORT SQL");
-        jPanelMainScreen.add(jBtImportSql2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1280, 60, -1, -1));
+        jBtImportSql2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtImportSql2ActionPerformed(evt);
+            }
+        });
+        jPanelMainScreen.add(jBtImportSql2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1280, 50, -1, -1));
+
+        jBtUpdateDB.setBackground(new java.awt.Color(255, 102, 102));
+        jBtUpdateDB.setForeground(new java.awt.Color(255, 255, 255));
+        jBtUpdateDB.setText("UPDATE DATABASE");
+        jBtUpdateDB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtUpdateDBActionPerformed(evt);
+            }
+        });
+        jPanelMainScreen.add(jBtUpdateDB, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 50, -1, -1));
+
+        jBtClearResults1.setBackground(new java.awt.Color(255, 102, 102));
+        jBtClearResults1.setForeground(new java.awt.Color(255, 255, 255));
+        jBtClearResults1.setText("CLEAR RESULTS");
+        jBtClearResults1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtClearResults1ActionPerformed(evt);
+            }
+        });
+        jPanelMainScreen.add(jBtClearResults1, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 50, -1, -1));
 
         getContentPane().add(jPanelMainScreen, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1680, 870));
         jPanelMainScreen.getAccessibleContext().setAccessibleDescription("");
@@ -537,8 +570,11 @@ public class MainScreen extends javax.swing.JFrame {
         String query = jTextAreaQuery.getText();
         operaciones.split_querys(query, jTabbedPaneResults);
 
-        String _status = jTextAreaStatus.getText() + "\n\n" + operaciones.num_results;
+        String _status = jTextAreaStatus.getText() + operaciones.num_results + "\n\n";
         jTextAreaStatus.setText(_status);
+        
+        String _exeptions = jTextAreaExceptions.getText() + operaciones.exeptions + "\n\n";
+        jTextAreaExceptions.setText(_exeptions);
     }//GEN-LAST:event_jBtExecuteActionPerformed
 
     private void jTextAreaQueryInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jTextAreaQueryInputMethodTextChanged
@@ -554,6 +590,42 @@ public class MainScreen extends javax.swing.JFrame {
             jBtExecute.setEnabled(true);
         }
     }//GEN-LAST:event_jTextAreaQueryKeyPressed
+
+    private void jBtImportScriptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtImportScriptActionPerformed
+        // TODO add your handling code here:
+        File script = extract_sqlfile();
+        
+        operaciones.import_sqlfile_script(script, jTextAreaQuery);
+                
+        String _status = jTextAreaStatus.getText() + operaciones.num_results + "\n\n" ;
+        jTextAreaStatus.setText(_status);
+        
+        String _exeptions = jTextAreaExceptions.getText() + operaciones.exeptions + "\n\n";
+        jTextAreaExceptions.setText(_exeptions);
+    }//GEN-LAST:event_jBtImportScriptActionPerformed
+
+    private void jBtImportSql2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtImportSql2ActionPerformed
+        // TODO add your handling code here:
+        File querys = extract_sqlfile();
+        
+        operaciones.import_sqlfile_query(querys, jTabbedPaneResults, jTextAreaQuery);
+                
+        String _status = jTextAreaStatus.getText() + operaciones.num_results + "\n\n";
+        jTextAreaStatus.setText(_status);
+        
+        String _exeptions = jTextAreaExceptions.getText() + operaciones.exeptions + "\n\n";
+        jTextAreaExceptions.setText(_exeptions);
+    }//GEN-LAST:event_jBtImportSql2ActionPerformed
+
+    private void jBtUpdateDBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtUpdateDBActionPerformed
+        // TODO add your handling code here:
+        cargarDBInformation();
+    }//GEN-LAST:event_jBtUpdateDBActionPerformed
+
+    private void jBtClearResults1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtClearResults1ActionPerformed
+        // TODO add your handling code here:
+        jTabbedPaneResults.removeAll();
+    }//GEN-LAST:event_jBtClearResults1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -591,9 +663,11 @@ public class MainScreen extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBtClearResults1;
     private javax.swing.JButton jBtExecute;
     private javax.swing.JButton jBtImportScript;
     private javax.swing.JButton jBtImportSql2;
+    private javax.swing.JButton jBtUpdateDB;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -617,7 +691,7 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JTable jTableData;
     private javax.swing.JTable jTableInfo;
     private javax.swing.JTable jTableSession;
-    private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTextArea jTextAreaExceptions;
     private javax.swing.JTextArea jTextAreaQuery;
     private javax.swing.JTextArea jTextAreaStatus;
     private javax.swing.JTree jTree_BDsInfo;

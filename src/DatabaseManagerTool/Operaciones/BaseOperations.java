@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -146,11 +147,9 @@ public class BaseOperations {
             num_results = "";
             exeptions = "";
             result = select(query);
-            System.out.println("AQUIII");
             if (result != null) {
                 ResultSetMetaData rsmd = result.getMetaData();
                 int num_columns = rsmd.getColumnCount();
-                System.out.println("\nNum Culumnas: " + num_columns);
                 
                 String columnas[] = new String[num_columns];
 
@@ -203,7 +202,7 @@ public class BaseOperations {
         }
     }
 
-    public void import_sqlfile_script(File file) {
+    public void import_sqlfile_script(File file, JTextArea text_area) {
         FileReader fr = null;
         try {
 
@@ -222,6 +221,7 @@ public class BaseOperations {
                         if (LastChar == ';') {
                             linea = linea.substring(0, linea.length() - 1);
                             PreparedStatement ps = c.conexion.prepareStatement(lineaBD + linea);
+                            text_area.append("\n" + lineaBD + linea);
                             ps.executeUpdate();
                             ps.close();
                             lineaBD = "";
@@ -246,7 +246,7 @@ public class BaseOperations {
         }
     }
 
-    public void import_sqlfile_query(File file, JTabbedPane panel) {
+    public void import_sqlfile_query(File file, JTabbedPane panel, JTextArea text_area) {
         FileReader fr = null;
         try {
 
@@ -266,6 +266,7 @@ public class BaseOperations {
                         if (LastChar == ';') {
                             linea = linea.substring(0, linea.length() - 1);
                             String query = lineaBD + linea;
+                            text_area.append("\n" + query);
                             fill_data(query, panel, n);
                             lineaBD = "";
                             linea = br.readLine();
