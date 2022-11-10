@@ -144,6 +144,7 @@ public class BaseOperations {
 
     public void fill_text_area(String query, JTextArea text_area) {
         try {
+            text_area.setText("");
             result = select(query);
             ResultSetMetaData rsmd = result.getMetaData();
             while (result.next()) {
